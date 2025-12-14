@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Rock Paper Scissors</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f0f0f0;
+      margin: 0;
+      padding: 40px;
+      transition: background 1s;
+    }
+    h1 {
+      color: darkred;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 6px;
+      border: none;
+      background-color: #333;
+      color: white;
+    }
+    button:hover {
+      background-color: #555;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 22px;
+      font-weight: bold;
+    }
+    #score {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+    /* "You Died" animation */
+    #deathOverlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      color: red;
+      font-size: 60px;
+      font-weight: bold;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s;
+      z-index: 9999;
+    }
+  </style>
+</head>
+<body>
+    <a href="index.html">Home</a>
+  <h1>Rock Paper Scissors</h1>
+  <p>Choose your move:</p>
+  <button onclick="play('rock')">🪨 Rock</button>
+  <button onclick="play('paper')">📄 Paper</button>
+  <button onclick="play('scissors')">✂️ Scissors</button>
+
+  <div id="result"></div>
+  <div id="score">Player: 0 | Computer: 0</div>
+  <div id="deathOverlay">YOU DIED</div>
+
+  <!-- Confetti library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <script>
+    let playerScore = 0;
+    let computerScore = 0;
+
+    function play(userChoice) {
+      const choices = ['rock','paper','scissors'];
+      const computerChoice = choices[Math.floor(Math.random()*3)];
+      let outcome = '';
+
+      if (userChoice === computerChoice) {
+        outcome = "It's a tie!";
+      } else if (
+        (userChoice==='rock' && computerChoice==='scissors') ||
+        (userChoice==='paper' && computerChoice==='rock') ||
+        (userChoice==='scissors' && computerChoice==='paper')
+      ) {
+        outcome = "You win!";
+        playerScore++;
+        launchConfetti();
+      } else {
+        outcome = "Computer wins!";
+        computerScore++;
+        showDeath();
+      }
+
+      document.getElementById('result').innerText =
+        `You chose ${userChoice}, computer chose ${computerChoice}. ${outcome}`;
+      document.getElementById('score').innerText =
+        `Player: ${playerScore} | Computer: ${computerScore}`;
+    }
+
+    function launchConfetti() {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 }
+      });
+    }
+
+    function showDeath() {
+      const overlay = document.getElementById('deathOverlay');
+      overlay.style.opacity = 1;
+      setTimeout(() => {
+        overlay.style.opacity = 0;
+      }, 2000);
+    }
+  </script>
+</body>
+</html>
